@@ -1,49 +1,57 @@
 import React, { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import Animated, { runOnJS, useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, {
+    runOnJS,
+    useAnimatedProps,
+    useSharedValue,
+    withTiming,
+} from 'react-native-reanimated';
 import { interpolatePath } from 'react-native-redash';
-import { SCREEN_WIDTH } from '../../app/constants/Screen';
+
+import { SCREEN_WIDTH } from './../../app/constants/Screen';
 import usePath from '../../app/hooks/usePath';
 import { getPathXCenter } from '../../app/utils/Path';
 import TabItem from './TabItem';
 import AnimatedCircle from './AnimatedCircle';
-import { Entypo, FontAwesome, FontAwesome5, FontAwesome6, Ionicons } from '@expo/vector-icons';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-export const CustomBottomTab = ({ state, descriptors, navigation }) => {
+const CustomBottomTab = ({ state, descriptors, navigation }) => {
     const { containerPath, curvedPaths, tHeight } = usePath();
     const circleXCoordinate = useSharedValue(0);
     const progress = useSharedValue(1);
+
     const handleMoveCircle = (currentPath) => {
         circleXCoordinate.value = getPathXCenter(currentPath);
     };
+
     const selectIcon = (routeName) => {
         switch (routeName) {
             case 'Encuentra de mascota':
-                return <MaterialIcons name="pets" size={24} color="black" />;
+                return 'search';
             case 'Solicitudes realizadas':
-                return <Entypo name="text-document" size={24} color="black" />;
+                return 'archive';
             case 'Mascotas favoritas':
-                return <FontAwesome6 name="heart-circle-check" size={24} color="black" />;
+                return 'star';
             case 'Perfil de la cuenta':
-                return <FontAwesome name="user-circle" size={24} color="black" />;
+                return 'user';
             case 'Registro de mascota':
-                return <FontAwesome5 name="paperclip" size={24} color="black" />;
+                return 'file-text';
             case 'Interesados':
-                return <Ionicons name="people" size={24} color="black" />;
+                return 'users';
             case 'Mascotas creadas':
-                return <FontAwesome6 name="folder-open" size={24} color="black" />;
+                return 'folder';
             default:
-                return null; // Puedes devolver null o un ícono predeterminado en caso de que no haya un ícono definido para una pestaña
+                return 'home';
         }
-    };    
+    };
+
     const animatedProps = useAnimatedProps(() => {
         const currentPath = interpolatePath(
             progress.value,
             Array.from({ length: curvedPaths.length }, (_, index) => index + 1),
-            curvedPaths,
+            curvedPaths
         );
         runOnJS(handleMoveCircle)(currentPath);
         return {
@@ -68,7 +76,8 @@ export const CustomBottomTab = ({ state, descriptors, navigation }) => {
                     {
                         height: tHeight,
                     },
-                ]}>
+                ]}
+            >
                 {state.routes.map((route, index) => {
                     const { options } = descriptors[route.key];
                     const label = options.tabBarLabel ? options.tabBarLabel : route.name;
@@ -88,6 +97,8 @@ export const CustomBottomTab = ({ state, descriptors, navigation }) => {
     );
 };
 
+export default CustomBottomTab;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -104,11 +115,9 @@ const styles = StyleSheet.create({
     },
     shadowMd: {
         elevation: 3,
-        shadowColor: '#000',
+        shadowColor: '#111111',
         shadowOpacity: 0.2,
         shadowRadius: 3,
         shadowOffset: { width: 0, height: 3 },
     },
 });
-
-export default CustomBottomTab;

@@ -1,16 +1,16 @@
 import React from 'react';
-import { View, Text, Button, Dimensions, TouchableOpacity, StyleSheet } from 'react-native';
-import { useAuth } from '../../context/authContext';
+import { View, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { Entypo } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CreateAPet from '../CreateAPet';
 import InterestPeople from '../InterestPeople';
 import Pets from '../Pets';
 import Profile from '../Profile';
 import CustomBottomTab from '../../components/BottomTabs/CustomBottonTab';
-
+import { useAuth } from '../../context/authContext';
+import Favourites from '../Favourites';
+import Recommended from '../CarouselRecomendedPets';
 const Tab = createBottomTabNavigator();
 
 const BottomTabs1 = () => {
@@ -27,7 +27,7 @@ const BottomTabs1 = () => {
                         tabBarLabel: 'Encuentra una mascota!'
                     }}
                     name="Encuentra una mascota"
-                    component={CreateAPet}
+                    component={Recommended}
                 />
                 <Tab.Screen
                     options={{
@@ -41,7 +41,7 @@ const BottomTabs1 = () => {
                         tabBarLabel: 'Mascotas'
                     }}
                     name="Mascotas favoritas"
-                    component={Pets}
+                    component={Favourites}
                 />
                 <Tab.Screen
                     options={{
@@ -100,26 +100,18 @@ const BottomTabs2 = () => {
 const styles = StyleSheet.create({
     buttonContainer: {
         alignSelf: 'flex-end', // Alinea el contenedor a la derecha
-        padding: 10,
+        borderWidth: 1,  // Añade un borde de 1 píxel
     },
 });
 
 export default function Home() {
     const { logout, user } = useAuth();
-    const handleLogout = async () => {
-        await logout();
-    };
     const isFutureAdopter = user.rol === "Futuro adoptante";
     const isFoundation = user.rol === "Fundación";
 
     return (
         <SafeAreaProvider>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={handleLogout}>
-                    <Entypo name="log-out" size={32} color="black" />
-                </TouchableOpacity>
-            </View>
-            <View style={{ paddingTop: hp(8), paddingHorizontal: wp(5), flex: 1 }}>
+            <View style={{ paddingTop: hp(1), paddingHorizontal: wp(3.25), flex: 1 }}>
                 {!isFoundation ? (
                     <BottomTabs1 />
                 ) : (

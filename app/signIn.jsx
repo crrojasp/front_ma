@@ -28,10 +28,11 @@ export default function SignIn() {
         setLoading(true);
         const response = await login(emailRef.current, passwordRef.current);
         setLoading(false);
-        if(!response.success){
-            Alert.alert('Sign In', response.msg);
+        if(!response.response){
+            if( !response.msg === ""){
+                Alert.alert('Sign In', response.msg);
+            }
         }
-
     }
     return (
         <CustomKeyBoardView>

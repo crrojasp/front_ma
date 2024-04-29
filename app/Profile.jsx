@@ -1,12 +1,54 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useAuth } from '../context/authContext';
+import { Entypo } from '@expo/vector-icons';
 
-const Profile = () => {
+export default function Profile() {
+    const { logout, user } = useAuth();
+    const handleLogout = async () => {
+        await logout();
+    };
+
     return (
-        <View>
-            <Text>Profile</Text>
-        </View>
-    )
+        <SafeAreaProvider>
+            <ScrollView contentContainerStyle={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>Perfil</Text>
+                    <TouchableOpacity onPress={handleLogout}>
+                        <Entypo name="log-out" size={26} color="black" />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.maincontent}>
+                </View>
+            </ScrollView>
+        </SafeAreaProvider>
+    );
 }
 
-export default Profile
+const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        paddingVertical: 20,
+        paddingHorizontal: 10,
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        marginBottom: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+    },
+    maincontent: {
+
+    },
+    fondo: {
+        backgroundColor: 'lightgray',
+    }
+});
